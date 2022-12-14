@@ -3,7 +3,7 @@
 
 // Doesnt need file saved. It will be saved in DB
 //import FileSaver from 'file-saver'
-export var exportExcel = function(luckysheet) {
+var exportExcel = function(luckysheet) {
   // instance the workbook
   const workbook = new Excel.Workbook()
   
