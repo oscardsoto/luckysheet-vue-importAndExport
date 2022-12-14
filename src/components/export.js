@@ -1,41 +1,44 @@
-// import { createCellPos } from './translateNumToLetter'
-const Excel = require('exceljs')
+// Doesnt require exceljs. Its implemented in Master
+//const Excel = require('exceljs')
 
-import FileSaver from 'file-saver'
-export var testaaa = function (){
-  console.log("...");
-}
+// Doesnt need file saved. It will be saved in DB
+//import FileSaver from 'file-saver'
 export var exportExcel = function(luckysheet, value) {
-  // 参数为luckysheet.getluckysheetfile()获取的对象
-  // 1.创建工作簿，可以为工作簿添加属性
+  // instance the workbook
   const workbook = new Excel.Workbook()
-  // 2.创建表格，第二个参数可以配置创建什么样的工作表
+  
+  // get the luckysheet object
   if (Object.prototype.toString.call(luckysheet) === '[object Object]') {
     luckysheet = [luckysheet]
   }
+  
+  // set all pages with their characteristics
   luckysheet.forEach(function(table) {
-    if (table.data.length === 0) return  true
-    // ws.getCell('B2').fill = fills.
+    if (table.data.length === 0)
+      return  true
+    
     const worksheet = workbook.addWorksheet(table.name)
     const merge = (table.config && table.config.merge) || {}
     const borderInfo = (table.config && table.config.borderInfo) || {}
-    // 3.设置单元格合并,设置单元格边框,设置单元格样式,设置值
+    
     setStyleAndValue(table.data, worksheet)
     setMerge(merge, worksheet)
     setBorder(borderInfo, worksheet)
+    
     return true
   })
 
-  // return
-  // 4.写入 buffer
-  const buffer = workbook.xlsx.writeBuffer().then(data => {
+  //const buffer = workbook.xlsx.writeBuffer().then(data => {
     // console.log('data', data)
-    const blob = new Blob([data], {
-      type: 'application/vnd.ms-excel;charset=utf-8'
-    })
-    console.log("导出成功！")
-    FileSaver.saveAs(blob, `${value}.xlsx`)
-  })
+    //const blob = new Blob([data], {
+      //type: 'application/vnd.ms-excel;charset=utf-8'
+    //})
+    //console.log("导出成功！")
+    //FileSaver.saveAs(blob, `${value}.xlsx`)
+  //})
+  
+  // return just the buffer
+  const buffer = workbook.xlsx.writeBuffer();
   return buffer
 }
 
@@ -334,10 +337,10 @@ function addborderToCell(borders, row_index, col_index) {
 
 function createCellPos(n) {
   let ordA = 'A'.charCodeAt(0)
-
   let ordZ = 'Z'.charCodeAt(0)
   let len = ordZ - ordA + 1
   let s = ''
+  
   while (n >= 0) {
     s = String.fromCharCode((n % len) + ordA) + s
 
